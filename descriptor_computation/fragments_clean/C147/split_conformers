@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use File::Copy;
+
+sub read_xyz {
+    # Read an xyz file containing multiple molecules and save them to an array
+    my $fn = shift(@_);
+    my @output;
+
+    open(my $fh, "<", $fn) || die "Could not open file $fn";
+
+    while(1) {
+        my $natom = <$fh>;
+        last if !$natom;
+        my $comment = <$fh>;
+        my $out = "$natom$comment";
+        foreach (0..$natom-1){
+            $out = $out . <$fh>;
+        }
+        push(@output, $out);
+    }
+    return @output;
+}
+
+my @molecules = read_xyz($ARGV[0]);
+my $i = 0;
+foreach my $mol (@molecules) {
+    mkdir "conf-$i";
+    open(my $fhout, ">", "conf-$i/conformer.xyz");
+    print $fhout $mol;
+    close $fhout;
+    copy(".CHRG", "conf-$i");
+    $i++;
+}
+
+print "saved $i conformers to directories conf-i\n";

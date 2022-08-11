@@ -1,0 +1,121 @@
+
+       ==============================================
+       |                                            |
+       |                 C R E S T                  |
+       |                                            |
+       |  Conformer-Rotamer Ensemble Sampling Tool  |
+       |          based on the GFN methods          |
+       |             P.Pracht, S.Grimme             |
+       |          Universitaet Bonn, MCTC           |
+       ==============================================
+       Version 2.11.2, Fr 17. Dec 12:10:44 CEST 2021
+  Using the xTB program. Compatible with xTB version 6.4.0
+
+   Cite work conducted with this code as
+
+   P. Pracht, F. Bohle, S. Grimme, PCCP, 2020, 22, 7169-7192.
+
+   and  S. Grimme, JCTC, 2019, 15, 2847-2862.
+
+   with help from:
+   C.Bannwarth, F.Bohle, S.Ehlert, S.Grimme,
+   C. Plett, P.Pracht, S. Spicher
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+ Command line input:
+ > crest -screen conformers_obabel.xyz
+
+
+ -------------------------
+ xTB Geometry Optimization
+ -------------------------
+ Geometry successfully optimized.
+
+     =======================================
+     |              S C R E E N            |
+     =======================================
+ Multilevel optimization and structure screening.
+
+ Input file: <conformers_obabel.xyz>
+ Containing 10 structures.
+
+ -------------------------
+ 1. crude pre-optimization
+ -------------------------
+ Optimizing all 10 structures from file "conformers_obabel.xyz" ...
+ 1 2 3 4 5 6 7 8 9 10
+ done.
+ running RMSDs...
+ done.
+ E lowest :   -76.31657
+ 10 structures remain within    24.00 kcal/mol window
+
+ -------------------------------------
+ 2. optimization with loose thresholds
+ -------------------------------------
+ Optimizing all 10 structures from file "crest_rotamers_0.xyz" ...
+ 1 2 3 4 5 6 7 8 9 10
+ done.
+ running RMSDs...
+ done.
+ E lowest :   -76.31761
+ 10 structures remain within    12.00 kcal/mol window
+
+ ------------------------------------------
+ 3. optimization with very tight thresholds
+ ------------------------------------------
+ Optimizing all 9 structures from file "crest_rotamers_2.xyz" ...
+ 1 2 3 4 5 6 7 8 9
+ done.
+ running RMSDs...
+ done.
+ E lowest :   -76.31773
+ 9 structures remain within     6.00 kcal/mol window
+
+ input  file name : crest_rotamers_3.xyz
+ output file name : crest_rotamers_4.xyz
+ number of atoms                :   44
+ number of points on xyz files  :   9
+ RMSD threshold                 :   0.1250
+ Bconst threshold               :   0.0100
+ population threshold           :   0.0500
+ conformer energy window  /kcal :   6.0000
+ # fragment in coord            :     1
+ # bonds in reference structure :    47
+   => # of C=C bonds :     7
+ number of reliable points      :     9
+ reference state Etot :  -76.317734250000001
+ number of doubles removed by rot/RMSD         :           0
+ total number unique points considered further :           9
+       Erel/kcal        Etot weight/tot  conformer     set   degen     origin
+       1   0.000   -76.31773    0.21962    0.43865       1       2
+       2   0.002   -76.31773    0.21903
+       3   0.309   -76.31724    0.13042    0.37104       2       3
+       4   0.356   -76.31717    0.12040
+       5   0.357   -76.31716    0.12022
+       6   0.906   -76.31629    0.04762    0.19031       3       4
+       7   0.907   -76.31629    0.04757
+       8   0.907   -76.31629    0.04757
+       9   0.907   -76.31629    0.04755
+T /K                                  :   298.15
+E lowest                              :   -76.31773
+ensemble average energy (kcal)        :    0.299
+ensemble entropy (J/mol K, cal/mol K) :   16.798    4.015
+ensemble free energy (kcal/mol)       :   -1.197
+population of lowest in %             :   43.865
+ number of unique conformers for further calc            3
+ list of relative energies saved as "crest.energies"
+
+ Final ensemble on file <crest_ensemble.xyz>
+
+ -----------------
+ Wall Time Summary
+ -----------------
+              SCREEN wall time :         0h : 0m :22s
+--------------------
+Overall wall time  : 0h : 0m :22s
+
+ CREST terminated normally.

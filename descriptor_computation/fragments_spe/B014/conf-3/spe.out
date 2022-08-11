@@ -1,0 +1,318 @@
+
+Running Job 1 of 1 fragments/B014/conf-3/spe_input.inp
+qchem fragments/B014/conf-3/spe_input.inp_366019.0 /gpfs/fs0/scratch/a/aspuru/rhickman/descriptor_computation/qchem366019/ 0
+/scinet/niagara/software/commercial/qc52/exe/qcprog.exe_s fragments/B014/conf-3/spe_input.inp_366019.0 /gpfs/fs0/scratch/a/aspuru/rhickman/descriptor_computation/qchem366019/
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 5.2, Q-Chem, Inc., Pleasanton, CA (2019)
+
+ License issued to: SRG Alan Aspuru-Guzik, University of Toronto
+
+ Yihan Shao,  Zhengting Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  Jia Deng,  Xintian Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  T. Kus,  A. Landau,  
+ Jie Liu,  E. I. Proynov,  R. M. Richard,  R. P. Steele,  E. J. Sundstrom,  
+ H. L. Woodcock III,  P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  
+ S. A. Baeppler,  D. Barton,  Z. Benda,  Y. A. Bernard,  E. J. Berquist,  
+ K. B. Bravaya,  H. Burton,  D. Casanova,  Chun-Min Chang,  Yunqing Chen,  
+ A. Chien,  K. D. Closser,  M. P. Coons,  S. Coriani,  S. Dasgupta,  
+ A. L. Dempwolff,  M. Diedenhofen,  Hainam Do,  R. G. Edgar,  Po-Tung Fang,  
+ S. Faraji,  S. Fatehi,  Qingguo Feng,  K. D. Fenk,  J. Fosso-Tande,  
+ J. Gayvert,  Qinghui Ge,  A. Ghysels,  G. Gidofalvi,  J. Gomes,  
+ J. Gonthier,  A. Gunina,  D. Hait,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  M. F. Herbst,  J. E. Herr,  
+ E. G. Hohenstein,  Z. C. Holden,  Kerwin Hui,  B. C. Huynh,  T.-C. Jagau,  
+ Hyunjun Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  P. Klunzinger,  K. Koh,  
+ D. Kosenkov,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  A. Kunitsa,  
+ Ka Un Lao,  A. Laurent,  K. V. Lawler,  Joonho Lee,  D. Lefrancois,  
+ S. Lehtola,  D. S. Levine,  Yi-Pei Li,  You-Sheng Lin,  Fenglai Liu,  
+ E. Livshits,  A. Luenser,  P. Manohar,  E. Mansoor,  S. F. Manzer,  
+ Shan-Ping Mao,  Yuezhi Mao,  N. Mardirossian,  A. V. Marenich,  
+ T. Markovich,  L. A. Martinez-Martinez,  S. A. Maurer,  N. J. Mayhall,  
+ S. C. McKenzie,  J.-M. Mewes,  P. Morgante,  A. F. Morrison,  
+ J. W. Mullinax,  K. Nanda,  T. S. Nguyen-Beck,  R. Olivares-Amaya,  
+ J. A. Parkhill,  Zheng Pei,  T. M. Perrine,  F. Plasser,  P. Pokhilko,  
+ S. Prager,  A. Prociuk,  E. Ramos,  D. R. Rehn,  F. Rob,  M. Scheurer,  
+ M. Schneider,  N. Sergueev,  S. M. Sharada,  S. Sharma,  D. W. Small,  
+ T. Stauch,  T. Stein,  Yu-Chuan Su,  A. J. W. Thom,  A. Tkatchenko,  
+ T. Tsuchimochi,  N. M. Tubman,  L. Vogt,  M. L. Vidal,  O. Vydrov,  
+ M. A. Watson,  J. Wenzel,  M. de Wergifosse,  T. A. Wesolowski,  A. White,  
+ J. Witte,  A. Yamada,  Jun Yang,  K. Yao,  S. Yeganeh,  S. R. Yost,  
+ Zhi-Qiang You,  A. Zech,  Igor Ying Zhang,  Xing Zhang,  Yan Zhao,  
+ Ying Zhu,  B. R. Brooks,  G. K. L. Chan,  C. J. Cramer,  M. S. Gordon,  
+ W. J. Hehre,  A. Klamt,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  Jeng-Da Chai,  
+ A. E. DePrince, III,  R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  
+ T. R. Furlani,  Chao-Ping Hsu,  Yousung Jung,  Jing Kong,  D. S. Lambrecht,  
+ WanZhen Liang,  C. Ochsenfeld,  V. A. Rassolov,  L. V. Slipchenko,  
+ J. E. Subotnik,  T. Van Voorhis,  J. M. Herbert,  A. I. Krylov,  
+ P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  J. Baker,  G. J. O. Beran,  K. Brandhorst,  
+ S. T. Brown,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  L. Fusti-Molnar,  W. A. Goddard III,  
+ A. Golubeva-Zadorozhnaya,  S. R. Gwaltney,  G. Hawkins,  A. Heyden,  
+ S. Hirata,  G. Kedziora,  F. J. Keil,  C. Kelley,  Jihan Kim,  R. A. King,  
+ R. Z. Khaliullin,  P. P. Korambath,  W. Kurlancheek,  A. M. Lee,  M. S. Lee,  
+ S. V. Levchenko,  Ching Yeh Lin,  D. Liotard,  R. C. Lochan,  I. Lotan,  
+ P. E. Maslen,  N. Nair,  D. P. O'Neill,  D. Neuhauser,  E. Neuscamman,  
+ C. M. Oana,  R. Olson,  B. Peters,  R. Peverati,  P. A. Pieniazek,  
+ Y. M. Rhee,  J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  
+ H. F. Schaefer III,  N. E. Schultz,  N. Shenvi,  A. C. Simmonett,  A. Sodt,  
+ D. Stuck,  K. S. Thanthiriwatte,  V. Vanovschi,  Tao Wang,  A. Warshel,  
+ C. F. Williams,  Q. Wu,  X. Xu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2015)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 5.2.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 8.300.2 (Tropical Shenanigans).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Tue Feb  8 16:57:02 2022  
+
+Host: 
+0
+
+     Scratch files written to /gpfs/fs0/scratch/a/aspuru/rhickman/descriptor_computation/qchem366019//
+ Jul1719 |scratch|qcdevops|jenkins|workspace|build_RNUM -1
+Processing $rem in /scinet/niagara/software/commercial/qc52/config/preferences:
+	 MEM_TOTAL  4000 
+NAlpha2: 102
+NElect   102
+Mult     1
+
+Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+0 1
+C         3.80117888160000   -1.55937150750000   -0.08390385530000
+C         2.48689932980000   -1.65561099400000    0.07432278460000
+C         1.51788002050000   -0.56446191380000    0.04298900880000
+C         0.16351950370000   -0.88220559020000    0.03578351970000
+C        -0.80592078240000    0.11919370180000   -0.00141861100000
+C        -2.23618604780000   -0.15065157790000   -0.01559059760000
+C        -2.85620500170000   -1.32063020900000   -0.00085637130000
+F        -2.31996787230000   -2.53502044630000    0.03141896760000
+F        -4.18355495700000   -1.44020090450000   -0.01724668030000
+C        -0.39897362730000    1.44911507920000   -0.02434642150000
+C         0.95399688610000    1.78226627480000   -0.00962352560000
+O         1.22899375030000    3.11566623760000   -0.02853019760000
+C         2.57421457600000    3.52756700100000   -0.01611726860000
+C         1.90842980710000    0.77596604910000    0.02380370520000
+H         4.43252133320000   -2.43043946930000   -0.04874635740000
+H         4.30490971970000   -0.62437525370000   -0.26077041410000
+H         2.05037423200000   -2.63403813330000    0.23117770070000
+H        -0.12608103390000   -1.91978769490000    0.05420210250000
+H        -2.88650138410000    0.71169013710000   -0.04237870490000
+H        -1.12039214820000    2.25032767130000   -0.05045791970000
+H         2.54841558590000    4.61586538680000   -0.03708483290000
+H         3.11477784020000    3.16269028260000   -0.89552460790000
+H         3.08825253840000    3.19644475400000    0.89207185440000
+H         2.95781280740000    1.01680160830000    0.04483272530000
+$end
+
+$rem
+BASIS = 6-31G*
+GUI = 2
+METHOD = B3LYP
+PRINT_ORBITALS false
+MOLDEN_FORMAT false
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      C       2.4173757720    -3.2102893313    -0.0964353672
+    2      C       1.2240336117    -2.6511769701     0.0615402786
+    3      C       0.9141292550    -1.2249869585     0.0385645779
+    4      C      -0.4221487886    -0.8382258204     0.0294990061
+    5      C      -0.7763803189     0.5099761643    -0.0000042224
+    6      C      -2.1553304216     0.9757310752    -0.0156575541
+    7      C      -3.2691687445     0.2596204596    -0.0093034782
+    8      F      -3.3969160223    -1.0619239778     0.0138598108
+    9      F      -4.4847618342     0.8059489159    -0.0261069144
+   10      C       0.2301255090     1.4699718599    -0.0133017568
+   11      C       1.5727171635     1.0972728261     0.0033947194
+   12      O       2.4658928998     2.1249345291    -0.0058099965
+   13      C       3.8403259164     1.8246925712     0.0091579402
+   14      C       1.9114775973    -0.2478222347     0.0290923960
+   15      H       2.5407587028    -4.2791911762    -0.0679005938
+   16      H       3.3152327206    -2.6409561171    -0.2666032920
+   17      H       0.3635438634    -3.2911694750     0.2113544279
+   18      H      -1.1830951446    -1.6008700839     0.0403944243
+   19      H      -2.2995557181     2.0462687735    -0.0358806366
+   20      H      -0.0060375923     2.5220632385    -0.0332725130
+   21      H       4.3511982307     2.7861186420    -0.0038032298
+   22      H       4.1356360447     1.2475264946    -0.8730960929
+   23      H       4.1231635650     1.2781909567     0.9147093205
+   24      H       2.9441735303    -0.5522637762     0.0515228535
+ ----------------------------------------------------------------
+ Molecular Point Group                 C1    NOp =  1
+ Largest Abelian Subgroup              C1    NOp =  1
+ Nuclear Repulsion Energy =         834.13682943 hartrees
+ There are       51 alpha and       51 beta electrons
+ Requested basis set is 6-31G(d)
+ There are 76 shells and 230 basis functions
+
+ Total QAlloc Memory Limit   4000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+ A cutoff of  1.0D-08 yielded   1842 shell pairs
+ There are     17910 function pairs
+ Smallest overlap matrix eigenvalue = 3.65E-04
+
+ Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000426 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 102.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ A restricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-05
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1    -703.1490425821      5.26e-02  
+    2    -699.8093123421      5.82e-03  
+    3    -699.6324672552      7.75e-03  
+    4    -700.0220899530      1.53e-03  
+    5    -700.0370737045      4.67e-04  
+    6    -700.0381573143      2.28e-04  
+    7    -700.0385051196      5.04e-05  
+    8    -700.0385200312      2.01e-05  
+    9    -700.0385224967      5.35e-06  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 32.84s  wall 33.00s 
+ SCF   energy in the final basis set =     -700.0385224967
+ Total energy in the final basis set =     -700.0385224967
+ 
+ --------------------------------------------------------------
+ 
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-24.7433 -24.7327 -19.1793 -10.3556 -10.2478 -10.2415 -10.2060 -10.2015
+-10.1971 -10.1904 -10.1842 -10.1840 -10.1807 -10.1802  -1.2842  -1.2230
+ -1.0698  -0.8684  -0.8138  -0.7873  -0.7469  -0.7309  -0.7007  -0.6454
+ -0.6264  -0.6002  -0.5767  -0.5614  -0.5326  -0.5177  -0.5088  -0.4956
+ -0.4782  -0.4730  -0.4554  -0.4420  -0.4396  -0.4359  -0.4287  -0.4112
+ -0.4044  -0.3894  -0.3737  -0.3623  -0.3545  -0.3371  -0.3291  -0.3174
+ -0.2603  -0.2182  -0.2170
+ -- Virtual --
+ -0.0353  -0.0129   0.0509   0.0856   0.0896   0.0987   0.1147   0.1206
+  0.1435   0.1495   0.1532   0.1648   0.1668   0.1745   0.1916   0.1931
+  0.2091   0.2283   0.2743   0.2933   0.3026   0.3205   0.3461   0.3837
+  0.3898   0.4151   0.4444   0.4813   0.4973   0.5048   0.5214   0.5224
+  0.5320   0.5410   0.5494   0.5582   0.5612   0.5679   0.5795   0.5923
+  0.5986   0.6086   0.6115   0.6235   0.6394   0.6509   0.6655   0.6696
+  0.7005   0.7250   0.7450   0.7633   0.7800   0.7887   0.8240   0.8353
+  0.8377   0.8483   0.8660   0.8731   0.8843   0.8873   0.9219   0.9310
+  0.9451   0.9570   0.9656   0.9945   1.0020   1.0463   1.0498   1.0605
+  1.0888   1.1139   1.1221   1.1334   1.1607   1.1618   1.1988   1.2157
+  1.2324   1.2418   1.2524   1.2812   1.3103   1.3309   1.3445   1.3564
+  1.3757   1.4052   1.4074   1.4411   1.4601   1.4635   1.4792   1.5027
+  1.5055   1.5215   1.5300   1.5365   1.5873   1.6493   1.6778   1.7094
+  1.7235   1.7708   1.7834   1.8069   1.8166   1.8278   1.8382   1.8711
+  1.8803   1.8972   1.9025   1.9524   1.9551   1.9607   1.9700   1.9875
+  1.9987   1.9999   2.0261   2.0332   2.0417   2.0849   2.1125   2.1132
+  2.1424   2.1643   2.1762   2.2102   2.2190   2.2418   2.2640   2.2692
+  2.2988   2.3256   2.3488   2.3830   2.3939   2.4190   2.4836   2.5262
+  2.5335   2.5653   2.5723   2.6170   2.6391   2.6487   2.6852   2.7059
+  2.7205   2.7735   2.8190   2.8647   2.9061   2.9495   2.9980   3.0512
+  3.1051   3.1471   3.2077   3.3340   3.4906   4.0551   4.0819   4.0939
+  4.1288   4.1509   4.2141   4.2448   4.2682   4.3524   4.4966   4.5264
+  4.7531   4.8470   5.3008
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 C                    -0.354956
+      2 C                    -0.110904
+      3 C                     0.182373
+      4 C                    -0.283098
+      5 C                     0.207103
+      6 C                    -0.298448
+      7 C                     0.544707
+      8 F                    -0.234017
+      9 F                    -0.249215
+     10 C                    -0.252162
+     11 C                     0.391016
+     12 O                    -0.510689
+     13 C                    -0.213441
+     14 C                    -0.264624
+     15 H                     0.145030
+     16 H                     0.140231
+     17 H                     0.130356
+     18 H                     0.134073
+     19 H                     0.160896
+     20 H                     0.134667
+     21 H                     0.169871
+     22 H                     0.151323
+     23 H                     0.152381
+     24 H                     0.127529
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       2.1157      Y       0.1336      Z       0.0191
+       Tot       2.1200
+    Quadrupole Moments (Debye-Ang)
+        XX     -71.3450     XY       0.3600     YY     -75.7264
+        XZ      -0.2627     YZ      -0.1836     ZZ     -82.2035
+    Octopole Moments (Debye-Ang^2)
+       XXX      30.4095    XXY      14.2274    XYY     -14.5342
+       YYY      -2.4347    XXZ      -1.1146    XYZ       1.0298
+       YYZ       0.6090    XZZ     -20.2095    YZZ       5.7146
+       ZZZ      -0.0419
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -2824.0381   XXXY     104.5884   XXYY    -673.5278
+      XYYY       2.0300   YYYY   -1294.6962   XXXZ      -4.3079
+      XXYZ       4.0268   XYYZ      -1.6731   YYYZ      -4.0113
+      XXZZ    -503.5784   XYZZ      19.4520   YYZZ    -261.7294
+      XZZZ       0.6980   YZZZ      -0.6893   ZZZZ     -86.2837
+ -----------------------------------------------------------------
+Archival summary:
+1\1\nia2015.scinet.local\SP\ProcedureUnspecified\6-31G*\211110\rhickman\TueFeb816:57:352022TueFeb816:57:352022\0\\#,ProcedureUnspecified,6-31G*,\\0,1\F\C,1,1.32791\C,2,1.32419,1,128.258\H,3,1.0804,2,115.066,1,-180,0\F,2,1.33283,1,108.688,3,-179.987,0\C,3,1.45557,2,128.592,1,0.0482543,0\C,6,1.39098,3,117.682,2,179.902,0\H,7,1.07846,6,120.998,3,0.0744923,0\C,7,1.39346,6,120.829,3,179.857,0\O,9,1.36159,7,115.473,6,-179.708,0\C,9,1.38734,7,119.657,6,0.217251,0\H,11,1.07687,9,120.574,7,-179.426,0\C,6,1.39427,3,123.389,2,-0.20248,0\H,13,1.0774,6,120.347,3,0.0995573,0\C,13,1.39115,6,120.864,3,179.771,0\C,10,1.40692,9,118.665,7,-179.961,0\H,16,1.08881,10,105.653,9,179.896,0\H,16,1.09484,10,111.573,9,-61.508,0\H,16,1.09485,10,111.557,9,61.3119,0\C,15,1.45965,13,118.404,6,-179.634,0\H,20,1.08281,15,114.265,13,-8.25589,0\C,20,1.32726,15,126.914,13,170.815,0\H,22,1.07638,20,121.214,15,-179.653,0\H,22,1.07668,20,123.081,15,-0.115713,0\\\@
+
+ Total job time:  33.14s(wall), 33.02s(cpu) 
+ Tue Feb  8 16:57:35 2022
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
