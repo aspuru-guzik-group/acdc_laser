@@ -27,7 +27,7 @@ def main(path: Path):
     with open('tida_spe_joblist.txt', 'w') as f:
         for job in spe_jobs:
             # f.write(f'{job[:-13]}\n')
-            f.write(f'{job}\n')
+            f.write(f'{job.parent}/\n')
 
     # with open('tddft_joblist.txt', 'w') as f:
     #     for job in tddft_jobs:
