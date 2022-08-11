@@ -28,5 +28,5 @@ def main(path: Path):
 
 
 if __name__ == "__main__":
-    tidas: Path = Path('./mols_crest_done')
+    tidas: Path = Path('./mols_crest_done').absolute()
     main(tidas)
