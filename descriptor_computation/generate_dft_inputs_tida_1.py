@@ -1,28 +1,39 @@
 import glob
-from utils import load_xyz, opt_input
+from pathlib import Path
+
+from utils import load_xyz, spe_input
 
 
-def main(mols: list[str]):
-    # generate the geometry optimization inputs
-    jobs = []
-    functionals = ['BP86']
-    for mol_id in mols:  # mol_ids
-        dir_ = f'mols_crest_done/{mol_id}/'
-        confs = glob.glob(dir_ + 'conf-*/')
+def main(path: Path):
+    spe_jobs = []
+    for xtb in path.rglob('xtbopt.xyz'):
+        conformer: Path = xtb.parent
+        xyz = load_xyz(xtb)
+        spe_file: Path = conformer / 'spe_input.inp'
+        spe_input(spe_file, xyz)
+        spe_jobs.append(spe_file)
+        # tddft_input(f'{dir_}tddft_input.inp', xyz)
 
-        for conf in confs:
-            xyz = load_xyz(f'{conf}/conformer.xyz')
-            # conf_id = conf.split('/')[-1].split('_')[-1].split('.')[0]
-            #        print(conf_id)
-            for functional in functionals:
-                opt_input(f'{conf}/{functional}_opt.inp', xyz)
-                jobs.append(f'{conf}')
+    # # get the job lists
+    # spe_jobs = []
+    # # tddft_jobs = []
+    # for mol_dir in mol_dirs:
+    #     spe_jobs.append(f'{mol_dir}spe_input.inp')
+    #     # tddft_jobs.append(f'{mol_dir}tddft_input.inp')
 
-    with open('opt_joblist.txt', 'w') as f:
-        for job in jobs:
+    # spe_jobs[0][:-13]
+    # tddft_jobs[0][:-15]
+
+    with open('tida_spe_joblist.txt', 'w') as f:
+        for job in spe_jobs:
+            # f.write(f'{job[:-13]}\n')
             f.write(f'{job}\n')
+
+    # with open('tddft_joblist.txt', 'w') as f:
+    #     for job in tddft_jobs:
+    #         f.write(f'{job[:-5]}\n')
 
 
 if __name__ == "__main__":
-    new_tidas = ['B031', 'B032', 'B033', 'B034', 'B035', 'B036', 'B041', 'B043', 'B050', 'B051', 'B052', 'B053', 'B054', 'B055', 'B057']
-    main(new_tidas)
+    tidas: Path = Path('tidas')
+    main(tidas)
