@@ -11,12 +11,13 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export PATH=$HOME/xtb/bin:$PATH
 
 # python
-# module load CCEnv
-# module load StdEnv
+module load CCEnv
+module load StdEnv
+module load gnu-parallel
 # module load intelpython3 gnu-parallel
 # conda activate madness-spectra
 
-export QCHEMPATH=/scinet/niagara/software/commercial/qc52
+export QCHEMPATH=/scinet/niagara/software/commercial/qc54
 export QCAUX=$QCHEMPATH/qcaux
 export QCSCRATCH=$(pwd)
 . $QCHEMPATH/qcenv.sh
