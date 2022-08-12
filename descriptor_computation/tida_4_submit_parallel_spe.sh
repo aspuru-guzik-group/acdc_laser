@@ -10,7 +10,7 @@
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export PATH=$HOME/xtb/bin:$PATH
 
-# python
+# pythonmo
 module load CCEnv
 module load StdEnv
 module load gnu-parallel

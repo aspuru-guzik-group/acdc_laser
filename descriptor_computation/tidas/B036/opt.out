@@ -54,7 +54,7 @@
  done.
  running RMSDs...
  done.
- E lowest :   -42.12972
+ E lowest :   -42.12712
  10 structures remain within    24.00 kcal/mol window
 
  -------------------------------------
@@ -65,49 +65,50 @@
  done.
  running RMSDs...
  done.
- E lowest :   -42.13045
+ E lowest :   -42.12761
  10 structures remain within    12.00 kcal/mol window
 
  ------------------------------------------
  3. optimization with very tight thresholds
  ------------------------------------------
- Optimizing all 10 structures from file "crest_rotamers_2.xyz" ...
- 1 2 3 4 5 6 7 8 9 10
+ Optimizing all 9 structures from file "crest_rotamers_2.xyz" ...
+ 1 2 3 4 5 6 7 8 9
  done.
  running RMSDs...
  done.
- E lowest :   -42.13051
- 6 structures remain within     6.00 kcal/mol window
+ E lowest :   -42.13042
+ 7 structures remain within     6.00 kcal/mol window
 
  input  file name : crest_rotamers_3.xyz
  output file name : crest_rotamers_4.xyz
  number of atoms                :   24
- number of points on xyz files  :   10
+ number of points on xyz files  :   9
  RMSD threshold                 :   0.1250
  Bconst threshold               :   0.0100
  population threshold           :   0.0500
  conformer energy window  /kcal :   6.0000
  # fragment in coord            :     1
  # bonds in reference structure :    24
- number of reliable points      :    10
+ number of reliable points      :     9
  number of removed by energy    :     1
- number of remaining points     :     9
- reference state Etot :  -42.130506519999997
- number of doubles removed by rot/RMSD         :           3
- total number unique points considered further :           6
+ number of remaining points     :     8
+ reference state Etot :  -42.130420070000000
+ number of doubles removed by rot/RMSD         :           1
+ total number unique points considered further :           7
        Erel/kcal        Etot weight/tot  conformer     set   degen     origin
-       1   0.000   -42.13051    0.49778    0.49778       1       1
-       2   0.054   -42.13042    0.45430    0.45430       2       1
-       3   1.795   -42.12765    0.02413    0.02413       3       1
-       4   1.805   -42.12763    0.02372    0.02372       4       1
-       5   5.681   -42.12145    0.00003    0.00007       5       2
-       6   5.682   -42.12145    0.00003
+       1   0.000   -42.13042    0.82605    0.82605       1       1
+       2   1.741   -42.12765    0.04383    0.08762       2       2
+       3   1.742   -42.12764    0.04379
+       4   1.751   -42.12763    0.04312    0.08621       3       2
+       5   1.751   -42.12763    0.04309
+       6   5.627   -42.12145    0.00006    0.00006       4       1
+       7   5.671   -42.12138    0.00006    0.00006       5       1
 T /K                                  :   298.15
-E lowest                              :   -42.13051
-ensemble average energy (kcal)        :    0.111
-ensemble entropy (J/mol K, cal/mol K) :    7.358    1.759
-ensemble free energy (kcal/mol)       :   -0.524
-population of lowest in %             :   49.778
+E lowest                              :   -42.13042
+ensemble average energy (kcal)        :    0.304
+ensemble entropy (J/mol K, cal/mol K) :    5.855    1.399
+ensemble free energy (kcal/mol)       :   -0.417
+population of lowest in %             :   82.605
  number of unique conformers for further calc            5
  list of relative energies saved as "crest.energies"
 
@@ -116,8 +117,8 @@ population of lowest in %             :   49.778
  -----------------
  Wall Time Summary
  -----------------
-              SCREEN wall time :         0h : 0m : 5s
+              SCREEN wall time :         0h : 0m : 3s
 --------------------
-Overall wall time  : 0h : 0m : 5s
+Overall wall time  : 0h : 0m : 3s
 
  CREST terminated normally.
