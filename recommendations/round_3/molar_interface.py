@@ -346,7 +346,9 @@ class MolarInterface:
         request = self.get_target_molecule(identifier, identifier_type)
 
         if request is not None:
-            data_dict = {"id": request.at[0, "hid"], "smiles": request.at[0, "smiles"], "CAS": request.at[0, "CAS"], "molecule_id": request.at[0, "molecule_id"]}
+            data_dict = {
+                        "id": request.at[0, "id"],
+                         "smiles": request.at[0, "smiles"], "CAS": request.at[0, "CAS"], "molecule_id": request.at[0, "molecule_id"]}
             return data_dict
         else:
             raise KeyError("The corresponding fragment could not be found in the database!")
