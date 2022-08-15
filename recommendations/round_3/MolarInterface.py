@@ -22,24 +22,29 @@ class MolarInterface:
 
     status_possible = ('AVAILABLE', 'ACQUIRED', 'PROCESSING', 'SYNTHESIZED', 'SHIPPED', 'RECEIVED', 'DONE', 'FAILED')
 
-    def __init__(self, db_name: str, user_details: dict, fragments: Union[tuple, list, set]):
+    def __init__(self, db_name: str, fragments: Union[tuple, list, set]):
         """
         Initializes the client to interact with the MOLAR.
 
-        Parameters:
-            user_details (dict): Dictionary of details of the registered user. {"email": $USER_EMAIL, "password": $USER_PASSWORD}
+        Args:
+            db_name: Name of the database.
+            fragments: List or tuple of all database fragments.
         """
         self._database = db_name
-        self._user: dict = user_details
         self._login()
-        self._client.test_token()
+        self._verify_connection()
         self._fragments: list = list(fragments)
 
     def _login(self) -> None:
         """
         Creates a user client by logging in to the MOLAR.
         """
-        self._config = ClientConfig(server_url="https://molar.cs.toronto.edu", database_name=self._database, **self._user)
+        self._config = ClientConfig(
+            server_url="https://molar.cs.toronto.edu",
+            database_name=self._database,
+            email=os.environ["MOLAR_USER"],
+            password=os.environ["MOLAR_PASSWORD"]
+        )
         self._client = Client(self._config)
 
     def _verify_connection(self) -> None:
@@ -583,7 +588,6 @@ class MolarInterface:
                 "molecule.molecule_id",
                 "molecule.hid",
                 "molecule.smiles",
-                "molecule.CAS",
                 "molecule.commercially_available"
             ]]
 
