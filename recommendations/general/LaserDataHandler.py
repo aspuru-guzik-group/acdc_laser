@@ -8,7 +8,7 @@ from MolarInterface import MolarInterface
 
 class LaserDataHandler(MolarInterface):
 
-    def __init__(self, db_name: str, fragments: tuple, active_labs: tuple):
+    def __init__(self, db_name: str, fragments: tuple, active_labs: list):
         super().__init__(db_name=db_name, fragments=fragments)
 
         self.active_labs = active_labs
@@ -28,7 +28,7 @@ class LaserDataHandler(MolarInterface):
         """
         self.all_previous_results = self.get_all_syntheses()
 
-        in_progress = self.all_previous_results[self.all_previous_results["synthesis.status"].isin(["AVAILABLE, ""ACQUIRED", "PROCESSING", "SYNTHESIZED", "SHIPPED", "RECEIVED"])]
+        in_progress = self.all_previous_results[self.all_previous_results["synthesis.status"].isin(["AVAILABLE", "ACQUIRED", "PROCESSING", "SYNTHESIZED", "SHIPPED", "RECEIVED"])]
         completed = self.all_previous_results[self.all_previous_results["synthesis.status"].isin(["DONE", "FAILED"])]
 
         return in_progress, completed
