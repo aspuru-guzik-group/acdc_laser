@@ -30,11 +30,11 @@ def process_recommendations(recommendations: List[dict], handler: LaserDataHandl
 
             # Write to File and Upload to DB
             file.write(f"{entry['hid']},{entry['smiles']}\n")
-            #handler.create_target_compound(
-            #    fragments=[entry[frag] for frag in entry if "fragment" in frag],
-            #    smiles=entry["smiles"],
-            #    procedure=entry["procedure"]
-            #)
+            handler.create_target_compound(
+                fragments=[entry[frag] for frag in entry if "fragment" in frag],
+                smiles=entry["smiles"],
+                procedure=entry["procedure"]
+            )
 
     # Save Molecules as Grid Image
     img = Draw.MolsToGridImage(
