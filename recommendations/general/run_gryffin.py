@@ -2,7 +2,7 @@ from typing import Dict, List
 from pathlib import Path
 import pandas as pd
 from Tools.FileHandling import load_json, load_pkl, save_pkl
-from Tools.LaserDataHandler import target_is_novel, target_is_makable
+from Tools.Constraints import target_is_novel, target_is_makable
 import numpy as np
 from gryffin import Gryffin
 
