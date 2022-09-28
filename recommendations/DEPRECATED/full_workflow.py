@@ -1,3 +1,7 @@
+# ATTN: This full workflow can currently not be used!
+#       Gryffin (feas branch) in its current implementation requires numpy = 1.19.2, whereas molar requires numpy > 1.20
+#       Therefore, the workflow is currently split into three individual routines, communicating via pkl files.
+
 from typing import Tuple, List, Dict
 import datetime
 from pathlib import Path
@@ -7,7 +11,7 @@ from rdkit.Chem import Draw
 from gryffin import Gryffin
 from recommendations.general.Tools.LaserDataHandler import LaserDataHandler, get_gain_cross_section
 from recommendations.general.Tools.TwoStepSuzuki import run_two_step_suzuki
-from Tools.FileHandling import load_json
+from recommendations.general.Tools.FileHandling import load_json
 
 
 def process_previous_observations(handler: LaserDataHandler) -> Tuple[List[dict], Dict[str, set]]:
