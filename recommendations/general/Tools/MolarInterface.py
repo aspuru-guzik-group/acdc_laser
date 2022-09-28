@@ -452,6 +452,7 @@ class MolarInterface:
                     "product.hid",
                     "product.smiles",
                     "product.optical_properties",
+                    "synthesis.procedure",
                     *[f"{frag}.{col}" for frag in self._fragments for col in ("hid", "smiles")],
                     "synthesis.synthesis_id",
                     "synthesis.status",
@@ -659,7 +660,13 @@ class MolarInterface:
     ##############################
 
     @_run_with_connection.__get__(0)
-    def create_target_compound(self, fragments: Union[tuple, list], smiles: str, identifier_type: str = "hid") -> Tuple[str, str, str]:
+    def create_target_compound(
+            self,
+            fragments: Union[tuple, list],
+            smiles: str,
+            procedure: str,
+            identifier_type: str = "hid"
+    ) -> Tuple[str, str, str]:
         """
         Creates all entries for the synthesis of a new target_zone compound in the MOLAR.
             - creates the entries in the molecule, molecule_molecule, and synthesis table, linked via the molecule_id
@@ -668,7 +675,8 @@ class MolarInterface:
 
         Parameters:
             fragments (tuple or list): Collection of all fragment identifiers (e.g. human id, MOLAR id, SMILES)
-            smiles (str): SMILES string of the
+            smiles (str): SMILES string of the target compound
+            procedure (str): Name of the synthesis procedure
             identifier_type (str): Type of identifier of the fragments
 
         Returns:
@@ -724,7 +732,8 @@ class MolarInterface:
             type="synthesis",
             data={
                 "molecule_id": mol_uuid,
-                "status": "AVAILABLE"
+                "status": "AVAILABLE",
+                "procedure": procedure
             }
         )
 

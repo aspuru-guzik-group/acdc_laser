@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Tuple, Callable, List, Dict
 
-from ChemicalReaction import ChemicalReaction
-from MolarInterface import MolarInterface
+from recommendations.general.Tools.MolarInterface import MolarInterface
 
 
 class LaserDataHandler(MolarInterface):
@@ -31,6 +30,9 @@ class LaserDataHandler(MolarInterface):
         in_progress = self.all_previous_results[self.all_previous_results["synthesis.status"].isin(["AVAILABLE", "ACQUIRED", "PROCESSING", "SYNTHESIZED", "SHIPPED", "RECEIVED"])]
         completed = self.all_previous_results[self.all_previous_results["synthesis.status"].isin(["DONE", "FAILED"])]
 
+        print(f"Currently in Progress: {in_progress.shape[0]}")
+        print(f"Completed Experiments: {completed.shape[0]}")
+
         return in_progress, completed
 
     def process_previous_results(self, previous_results: pd.DataFrame, get_target_property: Callable) -> Tuple[List[dict], Dict[str, set]]:
@@ -57,13 +59,13 @@ class LaserDataHandler(MolarInterface):
                 data[frag] = row[f"{frag}.hid"]
                 used_fragments[frag].add(row[f"{frag}.hid"])
 
-            # Extract target information
-            try:
-                data["obj"] = get_target_property(row) if get_target_property(row) else np.nan
-            except KeyError:
-                data["obj"] = np.nan
+            data["procedure"] = row["synthesis.procedure"]
+            data["obj"] = get_target_property(row) if get_target_property(row) else np.nan
 
             observations.append(data)
+
+        print(f"{len(observations)} Observations were created for Gryffin.")
+        print(f"Used Fragments:", ", ".join([f"{frag} ({len(used_fragments[frag])})" for frag in used_fragments]))
 
         return observations, used_fragments
 
@@ -78,7 +80,7 @@ class LaserDataHandler(MolarInterface):
 
         return all_available_fragments
 
-    def target_is_makable(self, parameters: dict, *labs) -> bool:
+    def target_is_makable(self, parameters: dict) -> bool:
         """
         Checks if a target can be made in a single location (i.e. all fragments are available at one spot).
 
@@ -88,7 +90,7 @@ class LaserDataHandler(MolarInterface):
         Returns:
             bool: True if the target can be made.
         """
-        for lab in labs:
+        for lab in self.active_labs:
             if all([parameters[frag] in self.available_fragments[lab][frag] for frag in self._fragments]):
                 return True
         return False
@@ -106,15 +108,24 @@ class LaserDataHandler(MolarInterface):
         return hid not in self.all_previous_results["product.hid"].values
 
 
-def run_two_step_suzuki(smiles_a: str, smiles_b: str, smiles_c: str) -> str:
-    first_step = ChemicalReaction(
-        "[C,c:1]B([OH])[OH].[C,c:2][Br,I]>>[C,c:1][C,c:2]",
-        "[C,c:1]B1OC(C)(C)C(C)(C)O1.[C,c:2][Br,I]>>[C,c:1][C,c:2]"
-    )
-    second_step = ChemicalReaction(
-        "[C,c:1]B1OC(=O)CN(C)CC(=O)O1.[C,c:2][Br,1]>>[C,c:1][C,c:2]"
-    )
-    intermediate: str = first_step(smiles_a, smiles_b)
-    product: str = second_step(intermediate, smiles_c)
+def get_gain_cross_section(data_entry: dict) -> float:
+    """
+    Method to extract the target gain cross section from the data.
 
-    return product
+    Args:
+        data_entry: Database entry (as dict)
+
+    Returns:
+        float: Gain cross section
+    """
+    if data_entry["synthesis.status"] == "DONE":
+        if data_entry["product.optical_properties"].get("validation_status") is True:
+            return data_entry["product.optical_properties"].get("gain_cross_section")
+        else:
+            return np.nan
+    else:
+        return np.nan
+
+
+
+
