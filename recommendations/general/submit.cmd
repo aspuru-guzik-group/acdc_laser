@@ -7,9 +7,10 @@
 #SBATCH --mem-per-cpu=16384
 
 module load cuda
-source /u/striethk/.bashrc
+source /h/292/striethk/.bashrc
+source /h/292/striethk/mambaforge/etc/profile.d/conda.sh
 
-source activate molar
+conda activate molar
 python prepare_gryffin.py
 conda activate gryffin-tf
 python run_gryffin.py
