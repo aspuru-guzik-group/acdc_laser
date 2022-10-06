@@ -30,6 +30,7 @@ def target_is_novel(target: dict, all_previous_recommendations: pd.DataFrame) ->
     Returns:
         bool: True if the target is novel
     """
+    # all_previous_recommendations = all_previous_recommendations[all_previous_recommendations["synthesis.status"] != "DONE"]
     hid = "".join([target[frag] for frag in target if "fragment" in frag])
     return hid not in all_previous_recommendations["product.hid"].values
 

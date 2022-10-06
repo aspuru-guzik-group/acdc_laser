@@ -61,9 +61,13 @@ class LaserDataHandler(MolarInterface):
                 used_fragments[frag].add(row[f"{frag}.hid"])
 
             data["procedure"] = row["synthesis.procedure"]
-            data["obj"] = get_target_property(row) if get_target_property(row) else np.nan
 
-            observations.append(data)
+            if get_target_property(row):
+                data["obj"] = get_target_property(row)
+                observations.append(data)
+            elif row["validation_status"] == "failed characterization":
+                data["obj"] = 0.0
+                observations.append(data)
 
         print(f"{len(observations)} Observations were created for Gryffin.")
         print(f"Used Fragments:", ", ".join([f"{frag} ({len(used_fragments[frag])})" for frag in used_fragments]))
