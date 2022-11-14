@@ -9,9 +9,9 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import Draw
 from gryffin import Gryffin
-from recommendations.general.Tools.LaserDataHandler import LaserDataHandler, get_gain_cross_section
-from recommendations.general.Tools.TwoStepSuzuki import run_two_step_suzuki
-from recommendations.general.Tools.FileHandling import load_json
+from Old_BayesOpt_Code.recommendations.general.Tools.LaserDataHandler import LaserDataHandler, get_gain_cross_section
+from Old_BayesOpt_Code.recommendations.general.Tools.TwoStepSuzuki import run_two_step_suzuki
+from Old_BayesOpt_Code.recommendations.general.Tools.FileHandling import load_json
 
 
 def process_previous_observations(handler: LaserDataHandler) -> Tuple[List[dict], Dict[str, set]]:
