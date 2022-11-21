@@ -17,6 +17,6 @@ class RandomForest(SupervisedModel):
         self._model.fit(features, targets.flatten())
 
     def _predict(self, features: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        predictions: np.ndarray = self._model.predict(features)
-        variances: np.ndarray = np.var([estimator.predict(features) for estimator in self._model.estimators_], axis=0)
+        predictions: np.ndarray = self._model.predict(features).reshape(-1, 1)
+        variances: np.ndarray = np.var([estimator.predict(features) for estimator in self._model.estimators_], axis=0).reshape(-1, 1)
         return predictions, variances

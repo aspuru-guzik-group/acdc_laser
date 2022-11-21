@@ -1,0 +1,2 @@
+from .tanimoto_kernel import TanimotoKernel
+from .base_fingerprint_kernel import tanimoto_distance

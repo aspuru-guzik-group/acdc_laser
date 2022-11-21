@@ -7,7 +7,7 @@ import numpy as np
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import *
-from hyperopt import fmin, tpe, space_eval, STATUS_OK
+from hyperopt import fmin, tpe, space_eval, STATUS_OK, early_stop
 
 from .Utils import save_csv, save_json
 from .Utils import calculate_metrics, calculate_average_metrics, plot_predictions
@@ -131,8 +131,8 @@ class SupervisedModel(metaclass=ABCMeta):
             raise KeyError("The model has not been instantiated and trained.")
 
         features_scaled: np.ndarray = self._feature_scaler.transform(features)
-        targets_scaled = self._predict(features_scaled)
-        return self._target_scaler.inverse_transform(targets_scaled)
+        targets_scaled, uncertainty_scaled = self._predict(features_scaled)
+        return self._target_scaler.inverse_transform(targets_scaled), self._target_scaler.inverse_transform(uncertainty_scaled)
 
     @abstractmethod
     def _predict(self, features: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -154,6 +154,8 @@ class SupervisedModel(metaclass=ABCMeta):
             targets: np.array,
             splitting_scheme: str,
             splitting_scheme_params: dict,
+            train_expansion_features: Optional[np.ndarray] = None,
+            train_expansion_targets: Optional[np.ndarray] = None,
             eval_metric: str = "R^2",
             max_evaluations: int = 100
     ) -> None:
@@ -166,6 +168,8 @@ class SupervisedModel(metaclass=ABCMeta):
             targets: Numpy ndarray of the corresponding targets for all data points.
             splitting_scheme: Name of the splitting scheme (must correspond to class name from sklearn.model_selection)
             splitting_scheme_params: Kwargs for the constructor of the splitting scheme.
+            train_expansion_features: Ndarray of additional data points to be added to the training data (features).
+            train_expansion_targets: Ndarray of additional data points to be added to the training data (targets).
             eval_metric: Name of the metric to be used as the loss function for hyperparameter optimization.
             max_evaluations: Maximum number of evaluations for hyperparameter optimiazation.
         """
@@ -180,12 +184,20 @@ class SupervisedModel(metaclass=ABCMeta):
                     splitting_scheme=splitting_scheme,
                     splitting_scheme_params=splitting_scheme_params,
                     name=time.strftime("%H%M%S", time.localtime()),
+                    train_expansion_features=train_expansion_features,
+                    train_expansion_targets=train_expansion_targets,
                     eval_metric=eval_metric
                 )
                 return {"loss": -loss, "status": STATUS_OK}
 
-            optimal_params = fmin(objective, space=self._hp_options, algo=tpe.suggest, max_evals=max_evaluations)
-            # TODO: Look at early_stop_fn / no_progress_loss from hyperopt to cancel early
+            optimal_params = fmin(
+                objective,
+                space=self._hp_options,
+                algo=tpe.suggest,
+                max_evals=max_evaluations,
+                early_stop_fn=early_stop.no_progress_loss(int(0.2*max_evaluations))
+            )
+
             self.hyperparameters = space_eval(self._hp_options, optimal_params)
 
         self.evaluate_performance(
@@ -194,6 +206,8 @@ class SupervisedModel(metaclass=ABCMeta):
             splitting_scheme=splitting_scheme,
             splitting_scheme_params=splitting_scheme_params,
             name="Optimized_Model",
+            train_expansion_features=train_expansion_features,
+            train_expansion_targets=train_expansion_targets,
             eval_metric=eval_metric,
             save_predictions=True
         )
@@ -207,6 +221,8 @@ class SupervisedModel(metaclass=ABCMeta):
             splitting_scheme: str,
             splitting_scheme_params: dict,
             name: str,
+            train_expansion_features: Optional[np.ndarray] = None,
+            train_expansion_targets: Optional[np.ndarray] = None,
             eval_metric: str = "R^2",
             save_predictions: bool = False,
     ) -> float:
@@ -220,6 +236,8 @@ class SupervisedModel(metaclass=ABCMeta):
              splitting_scheme: Name of the splitting scheme (must correspond to class name from sklearn.model_selection)
              splitting_scheme_params: Kwargs for the constructor of the splitting scheme.
              name: Base name of the current evaluation run.
+             train_expansion_features: Ndarray of additional data points to be added to the training data (features).
+             train_expansion_targets: Ndarray of additional data points to be added to the training data (targets).
              eval_metric: Name of the metric returned as a loss
              save_predictions: True if the predictions should be saved.
 
@@ -234,17 +252,26 @@ class SupervisedModel(metaclass=ABCMeta):
             local_path: Path = self._output_dir / name
             local_path.mkdir(parents=True, exist_ok=True)
 
+        # Create empty dummy arrays if no training data expansion is provided
+        if train_expansion_features is None:
+            train_expansion_features: np.ndarray = np.empty((0, features.shape[1]))
+            train_expansion_targets: np.ndarray = np.empty((0, 1))
+
         # Instantiate splitter from sklearn
         splitter = eval(splitting_scheme)(**splitting_scheme_params, random_state=self._random_state)
         for i, (train, test) in enumerate(splitter.split(features)):
 
+            # Merge train data with expansion data
+            train_features = np.vstack((features[train, :], train_expansion_features))
+            train_targets = np.vstack((targets[train, :], train_expansion_targets))
+
             # Train the model, obtain predictions for train and test data
-            self.train(features=features[train, :], targets=targets[train, :])
-            train_prediction, train_uncertainty = self.predict(features=features[train, :])
+            self.train(features=train_features, targets=train_targets)
+            train_prediction, train_uncertainty = self.predict(features=train_features)
             test_prediction, test_uncertainty = self.predict(features=features[test, :])
             performance_metrics.append(
                 {
-                    "train": calculate_metrics(targets[train, :], train_prediction, train_uncertainty),
+                    "train": calculate_metrics(train_targets, train_prediction, train_uncertainty),
                     "test": calculate_metrics(targets[test, :], test_prediction, test_uncertainty)
                 }
             )
@@ -252,12 +279,12 @@ class SupervisedModel(metaclass=ABCMeta):
             # If specified, save observed and predicted values as csv file
             if save_predictions:
                 save_csv(
-                    np.vstack((targets[train, :].flatten(), train_prediction, train_uncertainty)).T,
+                    np.vstack((train_targets.flatten(), train_prediction.flatten(), train_uncertainty.flatten())).T,
                     colnames=["True Values", "Predicted Values", "Prediction Uncertainty"],
                     file_path=local_path / f"Train_{i}.csv"
                 )
                 save_csv(
-                    np.vstack((targets[test, :].flatten(), test_prediction, test_uncertainty)).T,
+                    np.vstack((targets[test, :].flatten(), test_prediction.flatten(), test_uncertainty.flatten())).T,
                     colnames=["True Values", "Predicted Values", "Prediction Uncertainty"],
                     file_path=local_path / f"Test_{i}.csv"
                 )

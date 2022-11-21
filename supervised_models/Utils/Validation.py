@@ -28,10 +28,14 @@ def calculate_metrics(
     Returns:
         dict: Dictionary of metrics names and their values.
     """
+    true_values = true_values.flatten()
+    predicted_values = predicted_values.flatten()
+    predicted_uncertainty = predicted_uncertainty.flatten()
+
     # Filter out any data points where the prediction is nan (for whatever reason)
-    predicted_values = predicted_values[np.invert(np.isnan(predicted_values))]
-    true_values = true_values[np.invert(np.isnan(predicted_values))].flatten()
-    predicted_uncertainty = predicted_uncertainty[np.invert(np.isnan(predicted_uncertainty))]
+    true_values = true_values[np.invert(np.isnan(predicted_values) | np.isinf(predicted_values))]
+    predicted_values = predicted_values[np.invert(np.isnan(predicted_values) | np.isinf(predicted_values))]
+    predicted_uncertainty = predicted_uncertainty[np.invert(np.isnan(predicted_uncertainty) | np.isinf(predicted_uncertainty))]
 
     metrics: dict = {
         "R^2": significant_digits(r2_score(true_values, predicted_values), 3),
@@ -39,7 +43,7 @@ def calculate_metrics(
         "RMSE": significant_digits(mean_squared_error(true_values, predicted_values, squared=False), 3),
         "R": significant_digits(pearsonr(true_values, predicted_values)[0], 3),
         "Uncertainty": significant_digits(float(np.mean(predicted_uncertainty)), 3) if predicted_uncertainty.size > 0 else np.nan,
-        "Uncertainty_Correlation": significant_digits(pearsonr(predicted_uncertainty, abs(true_values - predicted_values))[0], 3) if predicted_uncertainty.size > 0 else np.nan
+        "Uncertainty_Correlation": significant_digits(pearsonr(predicted_uncertainty, abs(true_values - predicted_values))[0], 3) if predicted_uncertainty.size == predicted_values.size else np.nan
     }
 
     return metrics

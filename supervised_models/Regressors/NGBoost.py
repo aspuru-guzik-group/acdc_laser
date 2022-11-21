@@ -18,4 +18,4 @@ class NGBoost(SupervisedModel):
 
     def _predict(self, features: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         predictions = self._model.pred_dist(features)
-        return predictions.loc, predictions.var
+        return predictions.loc.reshape(-1, 1), predictions.var.reshape(-1, 1)

@@ -6,6 +6,21 @@ Author: Ryan-Rhys Griffiths and Austin Tripp 2022
 import torch
 from gpytorch.kernels import Kernel
 from gpytorch.kernels.kernel import default_postprocess_script
+import numpy as np
+from scipy.spatial.distance import jaccard
+
+
+def tanimoto_distance(fp1: np.array, fp2: np.array, **kwargs) -> float:
+    """
+    Computes the Tanimoto distance between to bit vectors (fp1 and fp2).
+
+    Args:
+        fp1, fp2: Numpy 1D array of the fingerprint.
+
+    Returns:
+        float: Tanimoto similarity
+    """
+    return 1 - jaccard(fp1, fp2)
 
 
 def batch_tanimoto_sim(

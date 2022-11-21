@@ -11,8 +11,11 @@ def significant_digits(number: Union[int, float, np.float64], no_digits: int = 3
         number: Value to be rounded
         no_digits: Number of significant figures.
     """
-    if np.isnan(number) or number == 0.0:
+    if np.isnan(number) or number == 0.0 or number == np.infty:
         return number
 
-    no_decimal_places = -int(floor(log10(abs(number)))) + no_digits - 1
-    return float(round(number, no_decimal_places))
+    try:
+        no_decimal_places = -int(floor(log10(abs(number)))) + no_digits - 1
+        return float(round(number, no_decimal_places))
+    except OverflowError:
+        return number

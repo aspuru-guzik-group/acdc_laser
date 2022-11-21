@@ -10,13 +10,21 @@ from supervised_models.SupervisedModel import SupervisedModel
 
 
 if torch.backends.mps.is_available():
-    device = torch.device("mps")
-elif torch.backends.cuda.is_available():
-    device = torch.device("cuda:0")
-else:
-    device = torch.device("cpu")
+    DEVICE = torch.device("cpu")
+    torch.set_default_dtype(torch.float64)
 
-torch.set_default_dtype(torch.float64)
+    # ATTN: This is just a temporary fix until PyTorch includes the update for https://github.com/pytorch/pytorch/pull/88542
+    # ATTN: Some more issues here ... the to_device() thing doesn't seem to work properly on M1
+    # DEVICE = torch.device("mps")
+    # torch.set_default_dtype(torch.float32)
+
+elif torch.backends.cuda.is_available():
+    DEVICE = torch.device("cuda:0")
+    torch.set_default_dtype(torch.float64)
+
+else:
+    DEVICE = torch.device("cpu")
+    torch.set_default_dtype(torch.float64)
 
 
 class ExactGPModel(gpytorch.models.ExactGP):
@@ -102,7 +110,7 @@ class GaussianProcess(SupervisedModel):
             likelihood=likelihood,
             **kwargs
         )
-        self.likelihood = likelihood()
+        self.likelihood = likelihood()  # .to(DEVICE)
 
     def _train(self, features: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -112,8 +120,8 @@ class GaussianProcess(SupervisedModel):
             features: Numpy ndarray (n_datapoints x n_features) of all input features.
             targets: Numpy ndarray (n_datapoints x 1) of all input targets.
         """
-        training_data_x = torch.tensor(features)  # torch.from_numpy(features)
-        training_data_y = torch.tensor(targets.flatten())  # torch.from_numpy(targets)
+        training_data_x = torch.tensor(features)  # .to(DEVICE)  # torch.from_numpy(features)
+        training_data_y = torch.tensor(targets.flatten())  # .to(DEVICE)  # torch.from_numpy(targets)
 
         # Instantiation of the Likelihood Function and the GP Model
         self._model = ExactGPModel(
@@ -121,7 +129,7 @@ class GaussianProcess(SupervisedModel):
             training_data_y,
             self.likelihood,
             **self.hyperparameters
-        )
+        )  # .to(DEVICE)
 
         # Setting the Model and the Likelihood to Training Mode
         self._model.train()
@@ -153,6 +161,6 @@ class GaussianProcess(SupervisedModel):
         self._model.eval()
         self.likelihood.eval()
 
-        test_data_x = torch.from_numpy(features)
+        test_data_x = torch.from_numpy(features)  # .to(DEVICE)
         prediction = self.likelihood(self._model(test_data_x))
-        return prediction.mean.detach().numpy(), prediction.variance.detach().numpy()
+        return prediction.mean.detach().numpy().reshape(-1, 1), prediction.variance.detach().numpy().reshape(-1, 1)
