@@ -1,6 +1,7 @@
 from typing import List, Optional
 import numpy as np
 from rdkit import Chem
+from rdkit.Chem import AllChem
 from mordred import Calculator, descriptors
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
@@ -9,6 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 class DescriptorEncoder(object):
 
     def __init__(self, calc_3d: bool = False):
+        self.calc_3d = calc_3d
         self.calculator = Calculator(descriptors, ignore_3D=not calc_3d)
 
     def encode_entry(self, *mols, concatenate: bool = True) -> np.array:
@@ -23,7 +25,7 @@ class DescriptorEncoder(object):
         Returns:
             np.array: Array (n_descriptors, ) of mordred descriptors. Failed values are represented as np.nan.
         """
-        mol_list: list = [Chem.MolFromSmiles(mol) for mol in mols]
+        mol_list: list = [self._generate_rdkit_mol(mol) for mol in mols]
         descriptor_list: list = [np.asarray(self.calculator(mol)).astype("float64") for mol in mol_list]
 
         if concatenate:
@@ -67,7 +69,7 @@ class DescriptorEncoder(object):
             if not pca:
                 return descriptor_array
             else:
-                return self._pca_analysis(descriptor_array, pca_components)
+                return self.pca_analysis(descriptor_array, pca_components)
 
         else:
             filtered_descriptors: list = []
@@ -79,12 +81,39 @@ class DescriptorEncoder(object):
                 if not pca:
                     filtered_descriptors.append(all_desc)
                 else:
-                    filtered_descriptors.append(self._pca_analysis(all_desc, pca_components))
+                    filtered_descriptors.append(self.pca_analysis(all_desc, pca_components))
 
             return np.stack(filtered_descriptors, axis=1)
 
+    def _generate_rdkit_mol(self, smiles: str) -> Chem.Mol:
+        """
+        Generates an RDKit Mol object from a SMILES string.
+        If the calc_3d attribute is True, embeds a 3D geometry and optimizes it using the MMFF force field.
+
+        Args:
+             smiles: SMILES string of the molecule.
+
+        Returns:
+            Chem.Mol: RDKit Mol object (with optionally embedded conformer).
+        """
+        if not self.calc_3d:
+            return Chem.MolFromSmiles(smiles)
+        else:
+            mol: Chem.Mol = Chem.MolFromSmiles(smiles)
+            try:
+                AllChem.EmbedMolecule(mol, maxAttempts=50000)  # Large number of maxAttempts to embed large molecules
+            except ValueError:
+                try:
+                    AllChem.EmbedMolecule(mol, useRandomCoords=True, maxAttompts=5000)  # try different embedding mode
+                except ValueError:
+                    return mol
+
+            AllChem.MMFFOptimizeMolecule(mol)
+
+            return mol
+
     @staticmethod
-    def _pca_analysis(descriptors: np.ndarray, n_components: int = 30) -> np.ndarray:
+    def pca_analysis(descriptors: np.ndarray, n_components: int = 30) -> np.ndarray:
         """
         Performs PCA analysis on the given ndarray of descriptors (n_samples, n_descriptors).
         Scales the features by a MinMax Scaler before PCA.
@@ -103,9 +132,3 @@ class DescriptorEncoder(object):
         pca_components: np.ndarray = pca.fit_transform(descriptors_normalized)
 
         return pca_components
-
-
-
-
-
-

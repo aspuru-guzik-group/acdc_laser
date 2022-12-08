@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Iterable, Optional
 import numpy as np
 from sklearn.preprocessing import PowerTransformer, FunctionTransformer, StandardScaler
 
@@ -100,3 +100,62 @@ class FunctionTransformScaler(object):
     def fit_transform(self, x: np.ndarray) -> np.ndarray:
         self.fit(x)
         return self.transform(x)
+
+
+class CategoricalTransformer(object):
+
+    def __init__(self, categories: Iterable, binary: bool = False):
+        self._categories = categories
+        self._unique_values: Optional[np.array] = None
+        self._binary = binary
+
+    def fit(self, x: np.array):
+        """
+        "Fits" the categorical transformer by identifying unique values in the data and assigning them to the
+        _unique values attribute. Matching to category names is done by index.
+        """
+        self._unique_values: np.array = np.unique(x)
+
+        if self._binary is True and len(self._unique_values) > 2:
+            raise ValueError(f"{len(x)}  classes were found for a binary classification task.")
+        if len(self._unique_values) > len(self._categories):
+            raise ValueError("There are more class options than class labels given.")
+
+    def transform(self, x: np.array) -> np.array:
+        """
+        Transforms original class labels to the categories defined in the _categories attribute.
+
+        Args:
+            x: Numpy array (n_samples) of original binary class labels.
+
+        Returns:
+             np.array: Numpy array (n_samples) of transformed class labels.
+        """
+        if self._unique_values is None:
+            raise ValueError("The transformer has not been trained yet.")
+
+        x_new = np.empty(len(x), dtype="int32")  # TODO: make data type attribute
+
+        for original_value, new_value in zip(self._unique_values, self._categories):
+            x_new[x == original_value] = new_value
+
+        return x_new
+
+    def fit_transform(self, x: np.array) -> np.array:
+        self.fit(x)
+        return self.transform(x)
+
+    def inverse_transform(self, x: np.array) -> np.array:
+        """
+        Transforms the predicted class labels (from self._categories) back to original class labels.
+
+        Args:
+             x: Numpy array (n_samples) of predicted class labels
+
+        Returns:
+            np.array: Numpy array (n_samples) of predicted original class labels.
+        """
+        for predicted_value, original_label in zip(self._categories, self._unique_values):
+            x[x == predicted_value] = original_label
+
+        return x

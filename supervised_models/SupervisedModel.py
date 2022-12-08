@@ -4,13 +4,15 @@ from typing import Any, Tuple, Optional
 from pathlib import Path
 import logging
 import numpy as np
+import copy
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import *
 from hyperopt import fmin, tpe, space_eval, STATUS_OK, early_stop
 
 from .Utils import save_csv, save_json
-from .Utils import calculate_metrics, calculate_average_metrics, plot_predictions
+from .Utils import calculate_regression_metrics, calculate_classification_metrics, calculate_average_metrics, plot_regression
+from .Utils import IdentityScaler
 
 
 class SupervisedModel(metaclass=ABCMeta):
@@ -21,9 +23,22 @@ class SupervisedModel(metaclass=ABCMeta):
     """
 
     name = ""
+    _prediction_types: dict = {
+        "regression": {
+            "default_target_scaler": StandardScaler,
+            "metrics": calculate_regression_metrics,
+            "plot": plot_regression
+        },
+        "classification": {
+            "default_target_scaler": IdentityScaler,
+            "metrics": calculate_classification_metrics,
+            "plot": lambda *args, **kwargs: None  # TODO: Implement visualization of classification results
+        }
+    }
 
     def __init__(
             self,
+            prediction_type: str,
             output_dir: Path,
             hyperparameters_fixed: Optional[dict] = None,
             hyperparameters: Optional[dict] = None,
@@ -33,21 +48,26 @@ class SupervisedModel(metaclass=ABCMeta):
         Instantiates the SupervisedModel object by setting a range of private attributes.
 
         Args:
-             output_dir: Path to the directory where output data should be saved.
-             hyperparameters_fixed: Dictionary of all model hyperparameters that should not be varied.
-             hyperparameters: Dictionary of all model hyperparameters (name and hyperopt object).
-             kwargs: Further keyword arguments
+            prediction_type: "regression", "classification"
+            output_dir: Path to the directory where output data should be saved.
+            hyperparameters_fixed: Dictionary of all model hyperparameters that should not be varied.
+            hyperparameters: Dictionary of all model hyperparameters (name and hyperopt object).
+            kwargs: Further keyword arguments
                         - "feature_scaler": Instance of a scaler (default: sklearn.preprocessing.StandardScaler).
                         - "target_scaler": Instance of a scaler (default: sklearn.preprocessing.StandardScaler).
                         - "random_state": Random state variable (default: 42)
                         - kwargs to be passed to the constructor of the specific model.
         """
+        self._prediction_type: str = prediction_type
+        self._prediction_tools: dict = self._prediction_types[prediction_type]
         self._model: Any = None
         self._output_dir = output_dir
+        self._output_dir.mkdir(parents=True, exist_ok=True)
         self._hp_options = hyperparameters if hyperparameters else {}
-        self._current_hp = hyperparameters_fixed if hyperparameters_fixed else {}
-        self._feature_scaler = kwargs.pop("feature_scaler") if kwargs.get("feature_scaler") else StandardScaler()
-        self._target_scaler = kwargs.pop("target_scaler") if kwargs.get("target_scaler") else StandardScaler()
+        self._hyperparameters_fixed: dict = hyperparameters_fixed if hyperparameters_fixed else {}
+        self._current_hp = {}
+        self._feature_scaler = kwargs.pop("feature_scaler")() if kwargs.get("feature_scaler") else StandardScaler()
+        self._target_scaler = kwargs.pop("target_scaler")() if kwargs.get("target_scaler") else self._prediction_tools["default_target_scaler"]()
         self._performance_metrics: dict = {}
         self._random_state = kwargs.pop("random_state") if kwargs.get("random_state") else 42
         self._kwargs: dict = kwargs
@@ -74,6 +94,8 @@ class SupervisedModel(metaclass=ABCMeta):
             KeyError: If a required hyperparameter is not defined.
             KeyError: If a hyperparameter is passed that is unknown for the current model.
         """
+        self._current_hp = copy.deepcopy(self._hyperparameters_fixed)
+
         for parameter, param_value in parameters.items():
             if parameter not in self._hp_options:
                 raise KeyError(f"Error when setting the current hyperparamters. The parameter {parameter} is unknown!")
@@ -195,8 +217,9 @@ class SupervisedModel(metaclass=ABCMeta):
                 space=self._hp_options,
                 algo=tpe.suggest,
                 max_evals=max_evaluations,
-                early_stop_fn=early_stop.no_progress_loss(int(0.2*max_evaluations))
+                early_stop_fn=early_stop.no_progress_loss(max(10, int(0.2*max_evaluations)))
             )
+            # stops if no improvement is observed for 20% of all iterations (min. 10)
 
             self.hyperparameters = space_eval(self._hp_options, optimal_params)
 
@@ -211,8 +234,6 @@ class SupervisedModel(metaclass=ABCMeta):
             eval_metric=eval_metric,
             save_predictions=True
         )
-
-        save_json(self._performance_metrics, self._output_dir / "hyperparameter_optimization.json")
 
     def evaluate_performance(
             self,
@@ -247,7 +268,7 @@ class SupervisedModel(metaclass=ABCMeta):
         logging.info(f"Performing Model Evaluation Using {splitting_scheme}.")
         performance_metrics: list = []
 
-        # Create folder if prediction should be saved
+        # Create folder where prediction should be saved
         if save_predictions:
             local_path: Path = self._output_dir / name
             local_path.mkdir(parents=True, exist_ok=True)
@@ -271,8 +292,8 @@ class SupervisedModel(metaclass=ABCMeta):
             test_prediction, test_uncertainty = self.predict(features=features[test, :])
             performance_metrics.append(
                 {
-                    "train": calculate_metrics(train_targets, train_prediction, train_uncertainty),
-                    "test": calculate_metrics(targets[test, :], test_prediction, test_uncertainty)
+                    "train": self._prediction_tools["metrics"](train_targets, train_prediction, train_uncertainty),
+                    "test": self._prediction_tools["metrics"](targets[test, :], test_prediction, test_uncertainty)
                 }
             )
 
@@ -296,7 +317,9 @@ class SupervisedModel(metaclass=ABCMeta):
             "all_metrics": performance_metrics,
             "average": average_metrics
         }
+        save_json(self._performance_metrics, self._output_dir / "hyperparameter_optimization.json")
+
         if save_predictions:
-            plot_predictions(local_path, "Test_*.csv", eval_metric, performance_metric)
+            self._prediction_tools["plot"](local_path, "Test_*.csv", eval_metric, performance_metric)
 
         return performance_metric

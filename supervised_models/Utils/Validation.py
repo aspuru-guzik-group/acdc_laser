@@ -2,13 +2,14 @@ from typing import Dict, List, Tuple
 import numpy as np
 from pathlib import Path
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-from scipy.stats import pearsonr
+from sklearn.metrics import accuracy_score, fbeta_score, roc_auc_score, cohen_kappa_score
+from scipy.stats import pearsonr, spearmanr
 from .SignificantDigits import significant_digits
 import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def calculate_metrics(
+def calculate_regression_metrics(
         true_values: np.ndarray,
         predicted_values: np.ndarray,
         predicted_uncertainty: np.ndarray
@@ -42,8 +43,40 @@ def calculate_metrics(
         "MAE": significant_digits(mean_absolute_error(true_values, predicted_values), 3),
         "RMSE": significant_digits(mean_squared_error(true_values, predicted_values, squared=False), 3),
         "R": significant_digits(pearsonr(true_values, predicted_values)[0], 3),
+        "rho": significant_digits(spearmanr(true_values, predicted_values)[0], 3),
         "Uncertainty": significant_digits(float(np.mean(predicted_uncertainty)), 3) if predicted_uncertainty.size > 0 else np.nan,
         "Uncertainty_Correlation": significant_digits(pearsonr(predicted_uncertainty, abs(true_values - predicted_values))[0], 3) if predicted_uncertainty.size == predicted_values.size else np.nan
+    }
+
+    return metrics
+
+
+def calculate_classification_metrics(
+        true_labels: np.ndarray,
+        predicted_labels: np.ndarray,
+        predicted_uncertainty: np.ndarray,
+) -> Dict[str, float]:
+    """
+    Calculates performance metrics for binary classification tasks.
+
+    Args:
+        true_labels: Numpy array of true experimental target labels
+        predicted_labels: Numpy array of predicted experimental labels
+        predicted_uncertainty: Numpy array of the ML prediction uncertainty.
+
+    Returns:
+        dict: Dictionary of metrics names and their values
+    """
+    true_labels = true_labels.flatten()
+    predicted_labels = predicted_labels.flatten()
+    predicted_uncertainty = predicted_uncertainty.flatten()  # Currently unused
+
+    metrics: dict = {
+        "accuracy": significant_digits(accuracy_score(true_labels, predicted_labels), 3),
+        "roc_auc": significant_digits(roc_auc_score(true_labels, predicted_labels), 3),
+        "f1_score": significant_digits(fbeta_score(true_labels, predicted_labels, beta=1), 3),
+        "f2_score": significant_digits(fbeta_score(true_labels, predicted_labels, beta=2), 3),
+        "cohen_kappa": significant_digits(cohen_kappa_score(true_labels, predicted_labels), 3)
     }
 
     return metrics
@@ -78,7 +111,7 @@ def calculate_average_metrics(
     return average_performance, average_performance["test"][eval_metric][0]
 
 
-def plot_predictions(data_path: Path, file_pattern: str, metric_name: str, metric_value: float) -> None:
+def plot_regression(data_path: Path, file_pattern: str, metric_name: str, metric_value: float) -> None:
     """
     Plots the predictions loaded from csv file(s) with predictive performance(s).
     Each file must contain the following columns: True Values, Predicted Values, PredictionUncertainty
