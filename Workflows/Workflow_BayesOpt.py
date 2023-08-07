@@ -104,3 +104,5 @@ def bayesopt_workflow(
     logging.info(f"Removed {len(not_assigned)} old recommendations.")
     upload_new_recommendations(recommended_hids, recommended_smiles)
     logging.info(f"Updated database with {len(recommended_hids)} new recommendations.")
+    config["iteration_number"] += 1
+    json.dump(config, open(bayesopt_config, "w"), indent=4)
