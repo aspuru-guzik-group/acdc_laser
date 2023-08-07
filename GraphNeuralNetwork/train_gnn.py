@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import numpy as np
+import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 from gnn.MoleculeEncoder import MolFeaturizer
@@ -8,13 +9,9 @@ from gnn.GNN import GNN
 
 
 # load the training dataset and transform the targets using a MinMaxScaler
-dft_dataset = np.load(
-    "data/full_dataset_filtered_r_0.98_descriptors_selected.npz",
-    allow_pickle=True
-)
-
-smiles = list(dft_dataset["smiles"])
-targets = dft_dataset["descriptors"]
+dft_dataset = pd.read_csv("Data/computational_seed_dataset/tddft_dataset_filtered_selected.csv", index_col=False)
+smiles = dft_dataset.loc[:, "smiles"].tolist()
+targets = dft_dataset.iloc[:, 1:].to_numpy(dtype=np.float64)
 target_scaler = MinMaxScaler()
 targets_scaled = target_scaler.fit_transform(targets)
 
@@ -56,3 +53,4 @@ np.savez_compressed(
 
 # save the model
 gnn_model.save_model(Path("model/trained_model"), num_node_features=41, num_edge_features=13)
+
