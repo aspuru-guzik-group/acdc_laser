@@ -854,7 +854,8 @@ class MolarInterface:
 
     @_run_with_connection.__get__(0)
     def update_optics_data(self, identifier: str, optics_data: dict, identifier_type: str = "hid") -> None:
-        """Uploads the optical characterization data after completion of a synthesis run.
+        """
+        Uploads the optical characterization data after completion of a synthesis run.
             - Checks for the uuid of the target_zone molecule in the molecule table (molecule.molecule_id).
             - If the target_zone molecule is not available, it attempts to create this entry from the HID.
             - Writes the characterization data to the entry in the molecule table (molecule.optical_properties).
@@ -935,7 +936,7 @@ class MolarInterface:
         token = self._get_token()
 
         out = requests.post(
-            "https://molar.cs.toronto.edu/organizer/v1/upload-experiment",
+            "https://molar.cs.toronto.edu/madness/v1/upload-experiment",
             params={"synthesis_id": synthesis_uuid},
             headers={"Authorization": f"Bearer {token}"},
             files={
@@ -949,7 +950,35 @@ class MolarInterface:
         if out.status_code == 200:
             print(f"Successfully uploaded {file_path}.")
             return
+
         raise MolarBackendError(out.status_code, f"Something went wrong: {out.text}")
+
+    @_run_with_connection.__get__(0)
+    def _retrieve_file(self, synthesis_uuid: str) -> str:
+        """
+        Retrieves the file name of the file uploaded to MOLAR (based on the synthesis UUID the file is linked to).
+
+        Args:
+            synthesis_uuid: UUID of the synthesis to be linked to.
+
+        Returns:
+            str: File name and server address of the uploaded file.
+
+        Raises:
+            MolarBackendError: If the upload was unsuccessful.
+        """
+        token = self._get_token()
+
+        file_name = requests.get(
+            "https://molar.cs.toronto.edu/madness/v1/download-experiment",
+            params={"synthesis_id": synthesis_uuid},
+            headers={"Authorization": f"Bearer {token}"}
+        )
+
+        if not file_name.status_code == 200:
+            raise MolarBackendError(file_name.status_code, f"Something went wrong: {file.text}")
+
+        return file_name.json()
 
     @_run_with_connection.__get__(0)
     def upload_hplc_data(self, data_archive: Path, identifier: str, identifier_type: str = "hid") -> None:
@@ -970,6 +999,50 @@ class MolarInterface:
         if synthesis_uuid is None:
             raise KeyError(f"The molecule entry corresponding to {identifier} in the MOLAR does not exist.")
         self._send_file(data_archive, synthesis_uuid)
+
+    @_run_with_connection.__get__(0)
+    def download_hplc_data(
+            self,
+            identifier: str,
+            identifier_type: str = "hid",
+            file_path: Path = None,
+            file_type: str = "tar.gz"
+    ) -> None:
+        """
+        Downloads an HPLC data archive from MOLAR and links it to a synthesis:
+            - gets the synthesis uuid
+            - gets the file Path from MOLAR using self._retrieve_file()
+            - downloads the file from MOLAR
+
+        Args:
+            identifier (str): Identifier of the target_zone compound to be synthesized
+            identifier_type (str): Which identifier to use ("molecule_id", "hid" (default), "smiles")
+            file_path (Path): Path that the file should be downloaded to.
+            file_type (str): File type of the file to be downloaded. Default: "tar.gz"
+
+        Raises:
+            KeyError: Synthesis entry does not exist in the database.
+        """
+        synthesis_uuid = self._get_synthesis_uuid_from_molecule(identifier, identifier_type)
+
+        if synthesis_uuid is None:
+            raise KeyError(f"The molecule entry corresponding to {identifier} in the MOLAR does not exist.")
+
+        file_name = self._retrieve_file(synthesis_uuid)
+
+        if file_path is None:
+            file_path = Path.cwd()
+
+        file_content = requests.get(
+            file_name,
+            headers={"Authorization": f"Bearer {self._get_token()}"}
+        )
+
+        if not file_content.status_code == 200:
+            raise MolarBackendError(file_content.status_code, f"Something went wrong: {file.text}")
+
+        with open(file_path / f"{identifier}.{file_type}", "wb") as f:
+            f.write(file_content.content)
 
     ####################################
     # DELETE ENTRIES FROM THE DATABASE #
