@@ -976,7 +976,7 @@ class MolarInterface:
         )
 
         if not file_name.status_code == 200:
-            raise MolarBackendError(file_name.status_code, f"Something went wrong: {file.text}")
+            raise MolarBackendError(file_name.status_code, f"Something went wrong: {file_name.text}")
 
         return file_name.json()
 
@@ -1006,7 +1006,7 @@ class MolarInterface:
             identifier: str,
             identifier_type: str = "hid",
             file_path: Path = None,
-            file_type: str = "tar.gz"
+            file_type: str = "tar.xz"
     ) -> None:
         """
         Downloads an HPLC data archive from MOLAR and links it to a synthesis:
@@ -1039,7 +1039,7 @@ class MolarInterface:
         )
 
         if not file_content.status_code == 200:
-            raise MolarBackendError(file_content.status_code, f"Something went wrong: {file.text}")
+            raise MolarBackendError(file_content.status_code, f"Something went wrong: {file_content.text}")
 
         with open(file_path / f"{identifier}.{file_type}", "wb") as f:
             f.write(file_content.content)
