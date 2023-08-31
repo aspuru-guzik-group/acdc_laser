@@ -64,3 +64,13 @@ def data_processing_workflow(
             spectroscopy_data=spectroscopy_results | {"timestamp": timestamp}
         )
         logging.info(f"Data Upload for {hid} completed.")
+
+
+if __name__ == "__main__":
+    data_processing_workflow(
+        completed_runs_dir=Path.cwd() / "_raw_data" / "completed_runs",
+        hplc_raw_data_dir=Path.cwd() / "_raw_data" / "raw_hplc_data",
+        hplc_column_info=Path.cwd() / "Settings" / "Column_ThermoScientific Accucore Phenyl-Hexyl.json",
+        optics_raw_data_dir=Path.cwd() / "_raw_data" / "raw_optics_data",
+        optics_settings=Path.cwd() / "Settings" / "spectroscopy_settings.json"
+    )
