@@ -106,3 +106,7 @@ def bayesopt_workflow(
     logging.info(f"Updated database with {len(recommended_hids)} new recommendations.")
     config["iteration_number"] += 1
     json.dump(config, open(bayesopt_config, "w"), indent=4)
+
+
+if __name__ == "__main__":
+    bayesopt_workflow(Path.cwd() / "Settings" / "bayesopt_config.json")
