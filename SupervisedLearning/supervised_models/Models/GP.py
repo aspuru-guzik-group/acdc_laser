@@ -374,12 +374,15 @@ class MultitaskGaussianProcess(SupervisedModel):
             hyperparameters_fixed: Optional[dict] = None,
             hyperparameters: Optional[dict] = None,
             device_idx: Optional[int] = 0,
-            hadamard_method: bool = False,
             **kwargs
     ):
         """
         Instantiates the MultitaskGaussianProcess class.
         """
+        self.likelihood = None
+        self._hadamard_method = hyperparameters_fixed.pop("hadamard_method", False) if hyperparameters_fixed is not None else False
+        self.device = DEVICES[device_idx]
+
         super().__init__(
             prediction_type=prediction_type,
             output_dir=output_dir,
@@ -388,9 +391,6 @@ class MultitaskGaussianProcess(SupervisedModel):
             **kwargs
         )
 
-        self.likelihood = None
-        self._hadamard_method = hadamard_method
-        self.device = DEVICES[device_idx]
         self._logger.info(f"GP model initialized on device {self.device}")
 
     def _train(self, features: np.ndarray, targets: np.ndarray) -> None:

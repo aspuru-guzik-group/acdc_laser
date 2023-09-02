@@ -52,6 +52,7 @@ class SupervisedModel(metaclass=ABCMeta):
         Args:
             prediction_type: "regression", "classification"
             output_dir: Path to the directory where output data should be saved.
+            n_tasks: Number of tasks for a possible multitask model (e.g. number of properties to predict).
             verbose: If True, prints additional information during model evaluation.
             hyperparameters_fixed: Dictionary of all model hyperparameters that should not be varied.
             hyperparameters: Dictionary of all model hyperparameters (name and hyperopt object).
@@ -197,8 +198,8 @@ class SupervisedModel(metaclass=ABCMeta):
             targets: np.ndarray,
             train_test_splitting: type,
             train_test_splitting_params: dict,
-            validation_splitting: type,
-            validation_splitting_params: dict,
+            validation_splitting: Optional[type] = None,
+            validation_splitting_params: Optional[dict] = None,
             validation_metric: str = "R^2",
             max_evaluations: int = 100,
             validation_target_index: Optional[int] = None,
@@ -281,8 +282,8 @@ class SupervisedModel(metaclass=ABCMeta):
             features: np.ndarray,
             targets: np.array,
             n_targets: int,
-            validation_splitting: type,
-            validation_splitting_params: dict,
+            validation_splitting: Optional[type],
+            validation_splitting_params: Optional[dict],
             outer_split_id: Union[str, int],
             eval_metric: str = "R^2",
             eval_target_index: Optional[int] = None,
@@ -310,6 +311,9 @@ class SupervisedModel(metaclass=ABCMeta):
             expansion_targets: Ndarray of additional data points to be added to the training data (targets).
             smiles: 1D Numpy array of SMILES for all data points (only required for ECFPSplitter).
         """
+        if validation_splitting is None or not self._hp_options:
+            return
+
         if validation_splitting == ECFPSplitter and smiles is not None:
             validation_splitting_params["molecule_smiles"] = smiles
         validation_splitter = validation_splitting(**validation_splitting_params, random_state=self._random_state)

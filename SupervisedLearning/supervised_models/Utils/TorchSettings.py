@@ -8,8 +8,8 @@ if torch.cuda.is_available():
     torch.set_default_dtype(torch.float64)
 
 elif torch.backends.mps.is_available():
-    DEVICES = [torch.device("mps")]
-    torch.set_default_dtype(torch.float32)
+    DEVICES = [torch.device("cpu")]
+    torch.set_default_dtype(torch.float64)
 
 else:
     DEVICES = [torch.device("cpu")]

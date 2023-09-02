@@ -1,3 +1,5 @@
+# This is an example script to train a GNN model on the computational seed dataset to generate the GNN embeddings
+
 import json
 from pathlib import Path
 import numpy as np

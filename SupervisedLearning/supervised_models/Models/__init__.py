@@ -5,4 +5,3 @@ from .NGBoost import NGBoost
 from .RandomForest import RandomForest
 from .XGBoost import XGBoost
 from .GP import GaussianProcess, MultitaskGaussianProcess
-from .LaplaceNN import LaplaceBNNModel
