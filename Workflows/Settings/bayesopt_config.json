@@ -1,0 +1,50 @@
+{
+  "n_jobs": 6,
+  "iteration_number": 0,
+  "targets": {
+    "gain_cross_section_at_PL_lambda_max": 1E-19,
+    "relative_QY": 1E-3,
+    "PL_lambda_max": null,
+    "tau1": null,
+    "max_gain_factor": null
+  },
+  "objective_index": 0,
+  "labs": [
+    "Toronto",
+    "Illinois"
+  ],
+  "batch_size": 50,
+  "working_directory": "MADNESS_Laser_Optimization",
+  "gnn_encoder_settings": "Trained_GNN/AtomEdgeFeatures.json",
+  "gnn_model": "Trained_GNN/Trained_Model_100",
+  "gnn_batch_size": 1024,
+  "surrogate_model": "GPSurrogate",
+  "surrogate_params": {
+    "training_iterations": 5000,
+    "learning_rate": 0.01,
+    "single_lengthscale": true
+  },
+  "acquisition_functions": [
+    "DQUpperConfidenceBound",
+    "DQUpperConfidenceBound",
+    "DQUpperConfidenceBound",
+    "DQExpectedImprovement",
+    "DQProbabilityOfImprovement",
+    "DQProbabilityOfImprovement",
+    "DQProbabilityOfImprovement",
+    "DQRandomSearch"
+  ],
+    "acquisition_function_params": [
+      {"beta":  0.01},
+      {"beta":  0.1},
+      {"beta":  1.0},
+      {},
+      {"tau":  0.01},
+      {"tau":  0.1},
+      {"tau":  1.0},
+      {}
+  ],
+  "acquisition_batch_size": 4096,
+  "acquisition_MC_sample_size": 1024,
+  "memory_decay": 0.02
+}

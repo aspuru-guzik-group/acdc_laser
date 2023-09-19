@@ -1,0 +1,111 @@
+{
+  "absorption": {
+    "evaluation_range": [
+      300,
+      800
+    ],
+    "baseline_range": [
+      600,
+      800
+    ],
+    "properties": {
+      "abs_lambda_max": {
+        "range": [
+          300,
+          800
+        ],
+        "required": true,
+        "error_code": "absorption wavelength out of bounds"
+      },
+      "abs_300_nm": {
+        "required": false
+      },
+      "abs_max": {
+        "required": false
+      },
+      "abs_end": {
+        "range": [
+          300,
+          800
+        ],
+        "required": true,
+        "error_code": "absorption wavelength out of bounds"
+      }
+    }
+  },
+  "emission": {
+    "evaluation_range": [385, 800],
+    "baseline_range": [300, 340],
+    "properties": {
+      "PL_lambda_max": {
+        "range": [
+          385,
+          800
+        ],
+        "required": true,
+        "error_code": "emission wavelength out of bounds"
+      },
+      "PL_max_intensity": {
+        "range": [
+          0.001,
+          null
+        ],
+        "required": true,
+        "error_code": "poor emission"
+      },
+      "gain_at_pl_lambda_max": {
+        "required": false
+      },
+      "max_gain_wl": {
+        "required": false
+      },
+      "max_gain_factor": {
+        "required": false
+      }
+    }
+  },
+  "transient_emission": {
+    "properties": {
+      "tau1": {
+        "range": [
+          0.05,
+          100
+        ],
+        "required": true,
+        "error_code": "lifetime out of bounds"
+      },
+      "tau2": {
+        "required": false
+      }
+    }
+  },
+  "time_trace": {
+    "properties": {
+      "relative_QY": {
+        "range": [
+          0,
+          1
+        ],
+        "required": true,
+        "error_code": "quantum yield failure"
+      },
+      "abs_degradation_rate": {
+        "required": false
+      },
+      "PL_degradation_rate": {
+        "required": false
+      }
+    }
+  },
+  "gain": {
+    "refractive_index": 1.5,
+    "properties": {
+      "gain_cross_section": {
+        "required": false
+      },
+      "gain_cross_section_at_PL_lambda_max": {
+        "required": false
+      }
+    }
+  }
+}
