@@ -12,10 +12,8 @@ SERIALIZABLE_SINGLE: type = Union[
     float,
     str,
     None,
-    np.float,
     np.float32,
     np.float64,
-    np.int,
     np.int32,
     np.int64
 ]

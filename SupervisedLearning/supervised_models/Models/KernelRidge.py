@@ -2,7 +2,7 @@ from typing import Tuple, Optional
 import numpy as np
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.base import BaseEstimator
-from supervised_models.SupervisedModel import SupervisedModel
+from ..SupervisedModel import SupervisedModel
 from ..Utils import CategoricalTransformer
 from scipy.spatial.distance import jaccard
 

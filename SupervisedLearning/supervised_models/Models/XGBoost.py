@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple
 from xgboost import XGBRegressor, XGBClassifier
-from supervised_models.SupervisedModel import SupervisedModel
+from ..SupervisedModel import SupervisedModel
 
 
 class XGBoost(SupervisedModel):

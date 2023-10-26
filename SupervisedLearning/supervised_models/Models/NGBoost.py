@@ -1,8 +1,8 @@
 import numpy as np
 from typing import Tuple
 from ngboost import NGBRegressor, NGBClassifier
-from supervised_models.SupervisedModel import SupervisedModel
-from supervised_models.Utils import CategoricalTransformer
+from ..SupervisedModel import SupervisedModel
+from ..Utils import CategoricalTransformer
 
 
 class NGBoost(SupervisedModel):

@@ -2,7 +2,7 @@ import copy
 from typing import Tuple
 import numpy as np
 from sklearn import linear_model
-from supervised_models.SupervisedModel import SupervisedModel
+from ..SupervisedModel import SupervisedModel
 
 
 class LinearModel(SupervisedModel):

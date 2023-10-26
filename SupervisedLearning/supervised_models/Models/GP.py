@@ -9,8 +9,8 @@ import gpytorch.constraints
 from gpytorch.kernels import Kernel
 from gpytorch.kernels.kernel import default_postprocess_script
 
-from supervised_models.SupervisedModel import SupervisedModel
-from supervised_models.Utils import CategoricalTransformer
+from ..SupervisedModel import SupervisedModel
+from ..Utils import CategoricalTransformer
 
 
 class ExactGPModel(gpytorch.models.ExactGP):

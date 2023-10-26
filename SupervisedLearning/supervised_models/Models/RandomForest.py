@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from supervised_models.SupervisedModel import SupervisedModel
+from ..SupervisedModel import SupervisedModel
 
 
 class RandomForest(SupervisedModel):
